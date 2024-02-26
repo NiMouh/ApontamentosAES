@@ -1,15 +1,4 @@
-# Avaliação
-
-- Teórica (9 valores)
-  - 2 frequências (4,5 valores cada)
-  - A primeira frequência é feita a 10 de abril
-  - A segunda frequência é feita na época de exame
-- Prática (11 valores)
-  - 2 trabalhos com grupos de dois (5,5 valores cada)
-  - O primeiro projeto é entregue a 28 de abril
-  - O segundo projeto é entregue na época de exame
-
-# Conteúdos
+# Teórica 1 - Introdução a Ambientes de Execução Seguros
 
 ## Trusted Computing Base (TCB)
 
