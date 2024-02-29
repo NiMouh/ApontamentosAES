@@ -228,3 +228,67 @@ sudo chown 1000 uid
 sudo chgrp 1000 uid
 ./uid
 ```
+
+This is the goal of the chroot system call, and Linux command; check how it works with the commands:
+
+```bash
+man 8 chroot # for linux commands
+man 2 chroot # for system calls
+```
+
+For the system call:
+ - it receives a `const char *path` that contains the path directory in the system
+ - on success the zero is returned. On error, -1 is returned 
+
+For the linux commands:
+ - `--groups=G_LIST`specify sumplementary groups
+ - `--userspec=USER` specify user to use
+ - `--skip-chdir` do not change working directory to `/`
+
+Is this experiment we will create a confined environment where only 4 commands exist: bash, ls, mkdir, and vi. 
+
+To find the path of the commands, use the command `which`:
+```bash
+which bash
+which ls
+which mkdir
+which vi
+```
+
+Create a directory, and copy the executables of the commands to the directory:
+```bash
+cd /new_root_aes
+mkdir lib bin
+cp /bin/bash /new_root_aes/bin
+cp /bin/ls /new_root_aes/bin
+cp /bin/mkdir /new_root_aes/bin
+cp /bin/vi /new_root_aes/bin
+```
+
+Copy the shared libraries of the commands to the directory:
+```bash
+ldd /bin/bash
+ldd /bin/ls
+ldd /bin/mkdir
+ldd /bin/vi
+```
+
+Copy the shared libraries to the directory:
+```bash
+cp /lib/x86_64-linux-gnu/libtinfo.so.5 /new_root_aes/lib
+cp /lib/x86_64-linux-gnu/libdl.so.2 /new_root_aes/lib
+cp /lib/x86_64-linux-gnu/libc.so.6 /new_root_aes/lib
+cp /lib/x86_64-linux-gnu/libtinfo.so.5 /new_root_aes/lib
+cp /lib/x86_64-linux-gnu/libdl.so.2 /new_root_aes/lib
+cp /lib/x86_64-linux-gnu/libc.so.6 /new_root_aes/lib
+cp /lib/x86_64-linux-gnu/libtinfo.so.5 /new_root_aes/lib
+cp /lib/x86_64-linux-gnu/libdl.so.2 /new_root_aes/lib
+```
+
+Change the root directory of the process with the command chroot. Check the result with the command ls.
+
+```bash
+sudo chroot /new_root_aes /bin/bash
+ls
+```
+
