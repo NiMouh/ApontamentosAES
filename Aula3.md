@@ -68,8 +68,8 @@ Dentro da pasta `HelloEnclaveV1` temos o código fonte com a seguinte estrutura:
 - `Enclave`: Contém o código do enclave;
   - `Enclave.cpp`: Código do enclave;
   - `Enclave.h`: Cabeçalho do enclave;
-  - `Enclave.edl`: Ficheiro de definição do enclave.
-  - `Enclave.lds`: Ficheiro de ligação do enclave.
+  - `Enclave.edl`: Ficheiro de definição do enclave (*Enclave Definition Language*);
+  - `Enclave.lds`: Ficheiro de ligação do enclave;
   - `Enclave_private_key.pem`: Chave privada do enclave.
   - `Enclave.config.xml`: Configuração do enclave.
 
@@ -125,6 +125,27 @@ Para compilar o código, basta executar o makefile presente na pasta `HelloEncla
 make
 ```
 
-Após a compilação, irá surgir uma versão do enclave assinada e uma versão não assinada. Caso seja alterado o código do enclave, é necessário recompilar o mesmo e assinar o mesmo, caso contrário, a aplicação irá devolver o erro `The enclave image is not correct`.
+Após a compilação, quatro ficheiros irão ser criados pela ferramenta `edger8r`, que é responsável por gerar o código de ligação entre o código da aplicação e o código do enclave:
+ - `App/Enclave_u.c`: Código de ligação entre a aplicação e o enclave;
+ - `App/Enclave_u.h`: Cabeçalho do código de ligação;
+ - `Enclave/Enclave_t.c`: Código de ligação entre o enclave e a aplicação;
+ - `Enclave/Enclave_t.h`: Cabeçalho do código de ligação.
+
+Nota: Onde o `t` significa *trusted* e o `u` significa *untrusted*.
+
+Irá surgir uma versão do enclave assinada e uma versão não assinada. Caso seja alterado o código do enclave, é necessário recompilar o mesmo e assinar o mesmo, caso contrário, a aplicação irá devolver o erro `The enclave image is not correct`.
 
 Este programa foi construído em *hardware-mode*, ou seja, é necessário ter um processador com suporte a SGX para executar o mesmo. Para trocar para *simulation-mode*, basta alterar a flag `SGX_MODE` presente no makefile para `SIM`.
+
+Foram calculados os tempos de execução de um programa de soma de elementos de uma lista, tanto dentro do enclave como fora do enclave. Os resultados foram os seguintes:
+```
+App: n = 10000
+sum = 499982552 times=[12950, 12852, 12879, 12838, 12846, 12889, 12810, 12872, 12787, 12777, ]
+Enclave: n = 10000
+sum = 49995000 times=[48918, 46643, 36184, 36360, 36132, 35979, 36435, 36060, 35983, 35908, ]
+```
+
+Como podemos ver, o tempo de execução dentro do enclave é muito superior ao tempo de execução fora do enclave. Isto deve-se ao facto de que o enclave é uma zona segura e isolada, o que implica que a comunicação entre o enclave e o mundo exterior é mais lenta.
+
+(Terceiro Exercicio - Por fazer)
+
